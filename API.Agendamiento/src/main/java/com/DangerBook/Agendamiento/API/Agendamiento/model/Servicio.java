@@ -1,0 +1,32 @@
+package com.DangerBook.Agendamiento.API.Agendamiento.model;
+
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "servicio")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+
+public class Servicio {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_servicio")
+    private Integer idServicio;
+
+    @Column(nullable = false, length = 100)
+    private String nombre;
+
+    @Column(nullable = false, length = 300)
+    private String descripcion;
+
+    @Column(nullable = false, length = 300)
+    private String foto;
+
+    @Column(nullable = false, length = 100)
+    private String precio;
+}
