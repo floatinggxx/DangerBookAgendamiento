@@ -2,5 +2,8 @@ package com.DangerBook.Agendamiento.API.Agendamiento.repository;
 
 import com.DangerBook.Agendamiento.API.Agendamiento.model.Agenda;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AgendaRepository extends JpaRepository <Agend
+@Repository
+public interface AgendaRepository extends JpaRepository <Agenda, Integer> {
+}
