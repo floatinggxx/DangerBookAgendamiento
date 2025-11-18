@@ -12,19 +12,22 @@ import lombok.*;
 @Builder
 public class Agenda {
 
-    @Id
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_agenda")
     private Integer idAgenda;
 
-    @Column(nullable = false)
+    @Column(name = "fecha_solicitud", nullable = false)
     private String fechaSolicitud;
 
     @Column(nullable = false)
     private Double total;
 
+    // ID del usuario (microservicio Usuarios)
     @Column(name = "id_usuario", nullable = false)
     private Long idUsuario;
 
+    // ID del horario (microservicio Horarios)
     @Column(name = "id_horario", nullable = false)
     private Integer idHorario;
 
