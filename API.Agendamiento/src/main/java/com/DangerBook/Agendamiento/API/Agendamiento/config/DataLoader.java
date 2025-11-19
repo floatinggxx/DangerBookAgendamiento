@@ -1,103 +1,62 @@
 package com.DangerBook.Agendamiento.API.Agendamiento.config;
 
+import com.DangerBook.Agendamiento.API.Agendamiento.model.Detalle;
+import com.DangerBook.Agendamiento.API.Agendamiento.model.Servicio;
+import com.DangerBook.Agendamiento.API.Agendamiento.repository.DetalleRepository;
+import com.DangerBook.Agendamiento.API.Agendamiento.repository.ServicioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.DangerBook.Agendamiento.API.Agendamiento.repository.AgendaRepository;
-import com.DangerBook.Agendamiento.API.Agendamiento.repository.DetalleRepository;
-import com.DangerBook.Agendamiento.API.Agendamiento.repository.ServicioRepository;
-import com.DangerBook.Agendamiento.API.Agendamiento.webclient.UsuariosClient;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Random;
 
 @Component
 @Profile("dev")
-@RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
 
-    private final AgendaRepository agendaRepository;
-    private final DetalleRepository DetalleRepository;
-    private final ServicioRepository servicioRepository;
-    private final UsuariosClient usuariosClient;
+    @Autowired
+    private ServicioRepository servicioRepository;
+    
+    @Autowired
+    private DetalleRepository detalleRepository;
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
+        
+        // cargar servicios si no hay datos
+        if (servicioRepository.count() == 0) {
+            Servicio s1 = new Servicio();
+            s1.setNombre("Corte clasico");
+            s1.setDescripcion("Corte tradicional de cabello");
+            s1.setFoto("corte.jpg");
+            s1.setPrecio("7000");
+            servicioRepository.save(s1);
 
-        if (horarioRepository.count() > 0) return;
-
-        Faker faker = new Faker(new Locale("es-CL"), new Random(321));
-
-        // 1) Crear Días
-        if (diaRepository.count() == 0) {
-            List<String> nombres = List.of(
-                    "Lunes", "Martes", "Miércoles", "Jueves",
-                    "Viernes", "Sábado", "Domingo"
-            );
-
-            nombres.forEach(n -> diaRepository.save(Dia.builder().dia(n).build()));
+            Servicio s2 = new Servicio();
+            s2.setNombre("Fade + Barba");
+            s2.setDescripcion("Perfilado y degradado completo");
+            s2.setFoto("fade.jpg");
+            s2.setPrecio("9000");
+            servicioRepository.save(s2);
+            
+            System.out.println("Servicios cargados: " + servicioRepository.count());
         }
 
-        List<Dia> dias = diaRepository.findAll();
-
-        // 2) Crear Bloques
-        for (int i = 0; i < 10; i++) {
-
-            LocalDateTime inicio = LocalDateTime.now()
-                    .plusDays(faker.number().numberBetween(0, 6))
-                    .withHour(faker.number().numberBetween(9, 20))
-                    .withMinute(0);
-
-            Bloque bloque = Bloque.builder()
-                    .fechaInicio(inicio)
-                    .fechaFin(inicio.plusHours(1))
-                    .build();
-
-            bloqueRepository.save(bloque);
+        // cargar detalles de ejemplo
+        if (detalleRepository.count() == 0) {
+            Random random = new Random();
+            
+            for (int i = 0; i < 4; i++) {
+                int precio = random.nextInt(7000) + 3000;
+                Detalle d = new Detalle();
+                d.setSubtotal(String.valueOf(precio));
+                detalleRepository.save(d);
+            }
+            
+            System.out.println("Detalles cargados: " + detalleRepository.count());
         }
 
-        List<Bloque> bloques = bloqueRepository.findAll();
-
-        // 3) Crear Horarios
-        for (int i = 0; i < 20; i++) {
-
-            Dia dia = dias.get(faker.number().numberBetween(0, dias.size()));
-            Bloque bloque = bloques.get(faker.number().numberBetween(0, bloques.size()));
-
-            Horario horario = Horario.builder()
-                    .id_dia(dia.getId_dia())
-                    .id_bloque(bloque.getId_bloque())
-                    .build();
-
-            horarioRepository.save(horario);
-        }
-
-        List<Horario> horarios = horarioRepository.findAll();
-
-        // 4) Obtener usuarios reales desde Usuarios API
-        List<Map> usuarios = usuariosClient.getAllUsuarios();
-
-        if (usuarios == null || usuarios.isEmpty()) {
-            System.out.println(" No hay usuarios disponibles desde Usuarios API.");
-            return;
-        }
-
-        // 5) Crear Disponibilidades reales
-        for (Horario h : horarios) {
-
-            Map<String, Object> usuarioRandom =
-                    usuarios.get(faker.number().numberBetween(0, usuarios.size()));
-
-            Long idUsuario = Long.valueOf(usuarioRandom.get("id_usuario").toString());
-
-            Disponibilidad disp = Disponibilidad.builder()
-                    .id_horario(h.getId_horario())
-                    .id_usuario(idUsuario)
-                    .build();
-
-            disponibilidadRepository.save(disp);
-        }
-
-        System.out.println("✅ DataLoader de Horarios completado con usuarios reales.");
+        System.out.println("=== Datos de prueba cargados correctamente ===");
     }
 }

@@ -1,32 +1,28 @@
 package com.DangerBook.Agendamiento.API.Agendamiento.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.DangerBook.Agendamiento.API.Agendamiento.model.Servicio;
 import com.DangerBook.Agendamiento.API.Agendamiento.repository.ServicioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
-@Transactional
 public class ServicioService {
 
-    private final ServicioRepository servicioRepository;
+    @Autowired
+    private ServicioRepository servicioRepository;
 
-    public ServicioService(ServicioRepository servicioRepository) {
-        this.servicioRepository = servicioRepository;
-    }
-
-    public List<Servicio> findAll() {
+    public List<Servicio> listarTodos() {
         return servicioRepository.findAll();
     }
 
-    public Servicio findById(Integer id) {
+    public Servicio buscarPorId(Integer id) {
         return servicioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
     }
 
-    public Servicio save(Servicio servicio) {
+    public Servicio crear(Servicio servicio) {
         return servicioRepository.save(servicio);
     }
 }

@@ -1,4 +1,4 @@
-package com.DangerBook.Agendamiento.API.Agendamiento.controller;
+package com.DangerBook.Agendamiento.API.Agendamiento.Controller;
 
 import com.DangerBook.Agendamiento.API.Agendamiento.model.Agenda;
 import com.DangerBook.Agendamiento.API.Agendamiento.service.AgendaService;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/agendas")
-public class AgendaController {
+public class AgendaControllerTest {
 
     @Autowired
     private AgendaService agendaService;

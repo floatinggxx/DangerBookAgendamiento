@@ -1,32 +1,28 @@
 package com.DangerBook.Agendamiento.API.Agendamiento.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.DangerBook.Agendamiento.API.Agendamiento.model.Detalle;
 import com.DangerBook.Agendamiento.API.Agendamiento.repository.DetalleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
-@Transactional
 public class DetalleService {
 
-    private final DetalleRepository detalleRepository;
+    @Autowired
+    private DetalleRepository detalleRepository;
 
-    public DetalleService(DetalleRepository detalleRepository) {
-        this.detalleRepository = detalleRepository;
-    }
-
-    public List<Detalle> findAll() {
+    public List<Detalle> listarTodos() {
         return detalleRepository.findAll();
     }
 
-    public Detalle findById(Integer id) {
+    public Detalle buscarPorId(Integer id) {
         return detalleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Detalle no encontrado"));
     }
 
-    public Detalle save(Detalle detalle) {
+    public Detalle crear(Detalle detalle) {
         return detalleRepository.save(detalle);
     }
 }
