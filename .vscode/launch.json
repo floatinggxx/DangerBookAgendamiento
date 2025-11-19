@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Application",
+            "request": "launch",
+            "mainClass": "com.DangerBook.Agendamiento.API.Agendamiento.Application",
+            "projectName": "Agendamiento-API"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-Application<API.Agendamiento>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
