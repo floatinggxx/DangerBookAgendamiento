@@ -1,11 +1,15 @@
 package com.DangerBook.Agendamiento.API.Agendamiento.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "agenda")
-@Data
+@Getter 
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Agenda {
 
     @Id
@@ -19,11 +23,9 @@ public class Agenda {
     @Column(nullable = false)
     private Double total;
 
-    // ID del usuario (microservicio Usuarios)
     @Column(name = "id_usuario", nullable = false)
     private Long idUsuario;
 
-    // ID del horario (microservicio Horarios)
     @Column(name = "id_horario", nullable = false)
     private Integer idHorario;
 

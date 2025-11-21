@@ -1,11 +1,15 @@
 package com.DangerBook.Agendamiento.API.Agendamiento.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "detalle")
-@Data
+@Getter 
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Detalle {
 
     @Id
