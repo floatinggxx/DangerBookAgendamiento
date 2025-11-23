@@ -17,13 +17,8 @@ public class ServicioController {
 
     @GetMapping
     public ResponseEntity<List<Servicio>> listar() {
-        List<Servicio> servicios = servicioService.listarTodos();
-        
-        if (servicios.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        
-        return ResponseEntity.ok(servicios);
+    List<Servicio> servicios = servicioService.listarTodos();
+    return ResponseEntity.ok(servicios);
     }
 
     @GetMapping("/{id}")
