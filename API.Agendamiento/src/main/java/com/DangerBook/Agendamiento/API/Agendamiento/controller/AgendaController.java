@@ -3,40 +3,54 @@ package com.DangerBook.Agendamiento.API.Agendamiento.controller;
 import com.DangerBook.Agendamiento.API.Agendamiento.model.Agenda;
 import com.DangerBook.Agendamiento.API.Agendamiento.service.AgendaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/agendas")
+@RequestMapping("/api/v1/agendamiento")
 @CrossOrigin(origins = "http://localhost:5173")
 public class AgendaController {
 
     @Autowired
     private AgendaService agendaService;
 
-    // obtener todas las agendas
     @GetMapping
-    public ResponseEntity<List<Agenda>> findAll() {
-        List<Agenda> lista = agendaService.findAll();
-        if (lista.isEmpty()) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<Agenda>> listar() {
+        List<Agenda> agendas = agendaService.obtenerTodas();
+        if (agendas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(agendas);
     }
 
-    // obtener agenda por el id
     @GetMapping("/{id}")
-    public ResponseEntity<Agenda> findById(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerPorId(@PathVariable Integer id) {
         try {
-            return ResponseEntity.ok(agendaService.findById(id));
+            Agenda agenda = agendaService.buscarPorId(id);
+            return ResponseEntity.ok(agenda);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Agenda no encontrada");
         }
     }
 
-    // para guardar nueva reserva
     @PostMapping("/guardar")
-    public ResponseEntity<Agenda> save(@RequestBody Agenda agenda) {
-        return ResponseEntity.status(201).body(agendaService.save(agenda));
+    public ResponseEntity<?> crear(@RequestBody Agenda agenda) {
+        try {
+            Agenda nuevaAgenda = agendaService.guardar(agenda);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaAgenda);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // DELETE → eliminar por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        agendaService.eliminar(id);
+        return ResponseEntity.ok().build();
     }
 }
